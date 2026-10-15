@@ -1,0 +1,24 @@
+[Unit]
+Description=Classroom Assistant bounded answer gateway
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+DynamicUser=yes
+WorkingDirectory=/opt/classroom-assistant/current
+EnvironmentFile=/etc/classroom-assistant.env
+ExecStart=/opt/classroom-assistant/venv/bin/uvicorn server:app --host 127.0.0.1 --port 8779 --workers 1 --no-access-log --no-proxy-headers
+Restart=on-failure
+RestartSec=3
+StateDirectory=classroom-assistant
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+UMask=0077
+MemoryMax=256M
+TasksMax=64
+
+[Install]
+WantedBy=multi-user.target

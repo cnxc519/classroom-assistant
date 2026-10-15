@@ -1,0 +1,12 @@
+{
+  "katex": {
+    "version": "0.19.0",
+    "source": "https://registry.npmjs.org/katex/-/katex-0.19.0.tgz",
+    "browser_script_sha256": "103a53763cc033bba8d175bf3f0ba597c3505c9b6747dd3f2c7bc2a6bfcc8ae7"
+  },
+  "markdown-it": {
+    "version": "15.0.2",
+    "source": "https://registry.npmjs.org/markdown-it/-/markdown-it-15.0.2.tgz",
+    "browser_script_sha256": "635972b985228e8af9f0143647c68616b7a3bb09f6946e7e4a52e43dcf5e7be5"
+  }
+}
