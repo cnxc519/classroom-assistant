@@ -30,8 +30,11 @@ class Settings:
         return cls(api_key=os.environ.get('DEEPSEEK_API_KEY',''),secret=os.environ.get('SESSION_SECRET',''),
                    database=os.environ.get('STATE_DB','/var/lib/classroom-assistant/usage.sqlite3'),
                    enabled=os.environ.get('API_ENABLED','1')=='1',
-                   limits=Limits(answers_per_day=int(os.environ.get('DAILY_REQUEST_LIMIT','500')),
-                                 tokens_per_day=int(os.environ.get('DAILY_TOKEN_LIMIT','300000'))))
+                   limits=Limits(answers_per_day=int(os.environ.get('DAILY_REQUEST_LIMIT','5000')),
+                                 tokens_per_day=int(os.environ.get('DAILY_TOKEN_LIMIT','3000000')),
+                                 answers_per_install_hour=int(os.environ.get('INSTALL_HOURLY_REQUEST_LIMIT','200')),
+                                 answers_per_install_day=int(os.environ.get('INSTALL_DAILY_REQUEST_LIMIT','1000')),
+                                 answers_per_ip_minute=int(os.environ.get('IP_MINUTE_REQUEST_LIMIT','30'))))
 
 class SessionBody(BaseModel):
     model_config=ConfigDict(extra='forbid')
@@ -69,7 +72,7 @@ def create_app(settings: Settings, transport=None):
         response.headers['X-Content-Type-Options']='nosniff'
         return response
     @app.get('/health')
-    async def health(): return dict(status='ok',version='0.3.0')
+    async def health(): return dict(status='ok',version='0.3.1')
     @app.post('/v1/session')
     async def session(body:SessionBody,request:Request):
         if not settings.enabled: raise HTTPException(503,'共享服务暂时暂停')

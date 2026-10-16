@@ -1,6 +1,7 @@
 import asyncio, json, os, sys, tempfile, unittest, uuid
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from unittest.mock import patch
 import httpx
 from fastapi.testclient import TestClient
 sys.path.insert(0,str(Path(__file__).resolve().parent))
@@ -53,6 +54,13 @@ class GatewayTests(unittest.TestCase):
         response=client.post('/v1/session',json={'install_id':str(uuid.uuid4())})
         self.assertEqual(response.status_code,200)
         return {'Authorization':'Bearer '+response.json()['token']}
+    def test_environment_limits_are_applied(self):
+        with patch.dict(os.environ,{'DAILY_REQUEST_LIMIT':'5000','DAILY_TOKEN_LIMIT':'3000000',
+                                   'INSTALL_HOURLY_REQUEST_LIMIT':'201','INSTALL_DAILY_REQUEST_LIMIT':'1001',
+                                   'IP_MINUTE_REQUEST_LIMIT':'31'}):
+            limits=Settings.from_env().limits
+        self.assertEqual((limits.answers_per_day,limits.tokens_per_day),(5000,3000000))
+        self.assertEqual((limits.answers_per_install_hour,limits.answers_per_install_day,limits.answers_per_ip_minute),(201,1001,31))
     def test_fixed_prompt_stream_math_usage_and_no_credentials(self):
         captured=[]
         def provider(request):

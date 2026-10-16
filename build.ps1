@@ -3,7 +3,7 @@ param(
     [string]$JavaHome = 'D:\JDK',
     [string]$DependencyDir = (Join-Path $PSScriptRoot '..\asr-upgrade'),
     [string]$BuildDir = (Join-Path $PSScriptRoot '..\build-public-v030'),
-    [string]$OutputApk = (Join-Path $PSScriptRoot '..\..\outputs\Classroom-Assistant-v0.3.0.apk')
+    [string]$OutputApk = (Join-Path $PSScriptRoot '..\..\outputs\Classroom-Assistant-v0.3.1.apk')
 )
 $ErrorActionPreference = 'Stop'
 if (Test-Path -LiteralPath (Join-Path $PSScriptRoot 'assets\personal-setup.json')) { throw 'Public builds must not contain a personal preset.' }

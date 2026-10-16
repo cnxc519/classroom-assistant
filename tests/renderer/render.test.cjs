@@ -23,4 +23,42 @@ assert.doesNotMatch(attack,/<script|<img|href="javascript:/);
 const maliciousMath=render(String.raw`\(\href{javascript:alert(1)}{点我}\)`);assert.doesNotMatch(maliciousMath,/href="javascript:/);
 for(const source of [String.raw`\(\frac{1}{`,String.raw`$$\begin{matrix}`,String.raw`\(\notarealcommand{x}\)`])assert.doesNotThrow(()=>render(source));
 assert.doesNotMatch(render('价格是 $5 和 $10。'),/class="katex"/);
-console.log('PASS: brackets/dollars, fractions, roots, integrals, matrices, streaming fragments, Markdown, and untrusted HTML/URL handling');
+const discrete=String.raw`# 离散数学
+
+**逻辑等价**：\(\neg(p\land q)\equiv\neg p\lor\neg q\)。
+
+\[\forall x\in A,\ \exists y\in B:\ (x,y)\in R\]
+
+\[A\cup B=\{x | x\in A\lor x\in B\},\quad A\cap B\subseteq A\]
+
+| $p$ | $q$ | $p\to q$ |
+| --- | --- | --- |
+| 真 | 真 | 真 |
+| 真 | 假 | 假 |
+
+> 集合与命题要核对条件。
+
+1. 自反性
+2. 传递性
+
+~~删除线~~ 与 *斜体*`;
+let html=render(discrete);
+assert.doesNotMatch(html,/katex-error|[\ue000-\ue0ff]/);
+for(const tag of ['h1','strong','table','blockquote','ol','s','em'])assert.match(html,new RegExp('<'+tag+'[ >]'),tag);
+assert.equal((html.match(/<th[ >]/g)||[]).length,3,'truth table columns');
+const table=render(String.raw`| 集合 | 条件 |
+| --- | --- |
+| $\{x | x\in A\}$ | $P(A|B)$ |
+| $\|x\|$ | $x\in A$ |`);
+assert.equal((table.match(/<td[ >]/g)||[]).length,4,'math pipes must not split cells');
+assert.doesNotMatch(table,/katex-error|[\ue000-\ue0ff]/);
+for(const language of ['math','latex','tex']){
+  html=render('```'+language+'\n'+String.raw`\forall x\in A,\ P(x)\implies Q(x)`+'\n```');
+  assert.match(html,/class="katex"/);assert.doesNotMatch(html,/katex-error|<pre/);
+}
+html=render('```markdown\n'+discrete+'\n```');assert.match(html,/<table>/);assert.doesNotMatch(html,/<pre|katex-error/);
+const literal=String.raw`$a|b$`;
+html=render('```python\n'+literal+'\n```');assert.match(html,/<pre>/);assert.ok(html.includes(literal));
+html=render('`'+literal+'`');assert.match(html,/<code>\$a\|b\$<\/code>/);
+assert.doesNotMatch(render('```latex\n'+String.raw`\href{javascript:alert(1)}{x}`+'\n```'),/href="javascript:/);
+console.log('PASS: common Markdown, wrappers, math fences, logic, sets, quantifiers, truth tables, formula pipes, streaming and untrusted HTML/URL');

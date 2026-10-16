@@ -13,11 +13,11 @@ class Limited(Exception):
 class Limits:
     registrations_per_ip_day: int = 30
     registrations_per_hour: int = 100
-    answers_per_ip_minute: int = 12
-    answers_per_install_hour: int = 30
-    answers_per_install_day: int = 120
-    answers_per_day: int = 500
-    tokens_per_day: int = 300000
+    answers_per_ip_minute: int = 30
+    answers_per_install_hour: int = 200
+    answers_per_install_day: int = 1000
+    answers_per_day: int = 5000
+    tokens_per_day: int = 3000000
 
 class Policy:
     def __init__(self, database: str, secret: str, limits: Limits = Limits(), clock=time.time):

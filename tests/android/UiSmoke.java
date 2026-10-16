@@ -63,12 +63,13 @@ public final class UiSmoke extends Instrumentation {
             Constructor<?> ctor=app("AnswerClient").getDeclaredConstructor(Context.class);ctor.setAccessible(true);Object client=ctor.newInstance(getTargetContext());
             Class<?> listener=app("AnswerClient$Listener");Object callback=Proxy.newProxyInstance(listener.getClassLoader(),new Class[]{listener},(p,m,a)->null);
             Method method=app("AnswerClient").getDeclaredMethod("answer",String.class,listener);method.setAccessible(true);
-            String answer=(String)method.invoke(client,"一元二次方程 x²-3x+1=0 的两个根是什么？请展示分式和根号公式。",callback);
-            if(answer.length()<20||!answer.contains("5"))throw new Exception("Unexpected live answer");
+            String answer=(String)method.invoke(client,"命题 p→q 与其逆否命题是否等价？请给出逻辑等价式和真值表。",callback);
+            if(answer.length()<20||!answer.contains("p")||!answer.contains("q"))throw new Exception("Unexpected live answer");
             show(answer,"classroom-live.png");result.putInt("live_answer_characters",answer.length());
         }
         show("**公式显示验证**\n\n二次方程的根：\\[x=\\frac{3\\pm\\sqrt{5}}{2}\\]\n\n积分与矩阵：\\[\\int_0^1 x^2\\,dx=\\frac13\\]\n\\[A=\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}\\]\n\n- 中文说明与 **重点**\n- 行内公式 $a^2+b^2=c^2$", "classroom-math.png");
-        result.putString("result","PASS: installed WebView assets, Markdown, fractions, roots, integral, matrix; live HTTPS="+live);
+        show("```markdown\n### 离散数学显示验证\n\n**逆否等价**：$p\\to q\\equiv\\neg q\\to\\neg p$\n\n```latex\n\\forall x\\in A,\\ \\exists y\\in B:(x,y)\\in R\n```\n\n| $p$ | $q$ | $p\\to q$ |\n| --- | --- | --- |\n| 真 | 真 | 真 |\n| 真 | 假 | 假 |\n| 假 | 真 | 真 |\n| 假 | 假 | 真 |\n\n集合写法：$A=\\{x | x\\in B\\}$\n```", "classroom-discrete.png");
+        result.putString("result","PASS: installed WebView assets, Markdown wrappers, math fences, logic, sets, truth tables, fractions and matrix; live HTTPS="+live);
         finish(Activity.RESULT_OK,result);
     }catch(Throwable error){result.putString("failure",error.toString());if(error instanceof InvocationTargetException)result.putString("cause",((InvocationTargetException)error).getTargetException().toString());finish(Activity.RESULT_CANCELED,result);}}
 }

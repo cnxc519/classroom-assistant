@@ -3,5 +3,5 @@ article{padding:10px 0 6px}p{margin:.4em 0 .9em}p:first-child{margin-top:0}p:las
 h1,h2,h3,h4{font-size:1.08em;line-height:1.5;margin:1em 0 .4em;color:#bcebd6}strong{color:#fff;font-weight:700}
 ul,ol{padding-left:1.5em;margin:.5em 0}li{margin:.25em 0}blockquote{border-left:3px solid #77b79a;margin:.5em 0;padding:.2em .8em;color:#bad1c2}
 pre{background:#111815;border-radius:10px;padding:12px;overflow:auto;white-space:pre;font-size:.83em;line-height:1.55}code{font-family:monospace;background:#111815;border-radius:4px;padding:1px 4px}pre code{padding:0}
-table{border-collapse:collapse;display:block;overflow:auto;max-width:100%;font-size:.92em}th,td{border:1px solid #526958;padding:7px 10px}th{background:#253a2e}
+table{border-collapse:collapse;display:block;overflow:auto;max-width:100%;font-size:.92em}th,td{border:1px solid #526958;padding:7px 10px}th{background:#253a2e}table .katex{white-space:nowrap}
 .katex{font-size:1.13em}.katex-display{overflow-x:auto;overflow-y:hidden;max-width:100%;padding:7px 0;margin:.55em 0}.math-fallback{font-family:monospace;white-space:pre-wrap;color:#d1ded5}.link-label{color:#9cdbc4}hr{border:0;border-top:1px solid #526958;margin:1em 0}
